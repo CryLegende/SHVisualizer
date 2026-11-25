@@ -40,7 +40,8 @@ joueurs:
   actif-par-defaut: true
   # Tous les combien de ticks un joueur qui se déplace reçoit ou perd les affichages autour de lui
   periode: 10
-  # Les joueurs autour voient le bras de celui qui manipule un bloc bouger à chaque clic
+  # Les joueurs autour voient le bras de celui qui manipule un bloc bouger à chaque clic. Lui-même ne le voit pas :
+  # chez lui, l'objet qu'il tient en main traverserait l'écran derrière son menu.
   geste-du-bras: true
   # Mondes sans aucun affichage
   mondes-ignores: []
@@ -164,9 +165,10 @@ objets:
   vol:
     # Ticks du trajet
     duree: 7
-    # Taille au départ et à l'arrivée (1 = un objet tombé au sol)
+    # Taille près du bloc, puis près du joueur (1 = un objet tombé au sol). Il est petit près du joueur : celui qui range
+    # ou prend un objet le voit passer juste sous ses yeux, où tout paraît énorme.
     taille: 0.9
-    taille-arrivee: 0.35
+    taille-joueur: 0.2
     # Degrés dont il tourne pendant le trajet (moins de 180)
     tour: 140
     # Hauteur visée sur le joueur, depuis ses pieds

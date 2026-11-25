@@ -261,7 +261,7 @@ final class Conteneurs implements Listener {
         }
         derniers.put(p.getUniqueId(), t);
         if (geste && reg.joueurs().geste()) {
-            p.swingMainHand();
+            moteur.pont.geste(p);
         }
         double[] j = effets.cible(p);
         double x = bx + 0.5, y, z = bz + 0.5;
@@ -279,9 +279,9 @@ final class Conteneurs implements Listener {
             }
         }
         if (entre) {
-            effets.vol(p.getWorld(), objet, j[0], j[1], j[2], x, y, z, x, y, z, c.portee(), false);
+            effets.vol(p.getWorld(), objet, j[0], j[1], j[2], x, y, z, x, y, z, c.portee(), false, false);
         } else {
-            effets.vol(p.getWorld(), objet, x, y, z, j[0], j[1], j[2], x, y, z, c.portee(), false);
+            effets.vol(p.getWorld(), objet, x, y, z, j[0], j[1], j[2], x, y, z, c.portee(), false, true);
         }
     }
 }

@@ -39,6 +39,11 @@ final class Pont {
     private final Deplacement deplacement;
     /** Marque « pas dans le monde » d'une entité ; null sur un serveur qui ne l'a pas. */
     private final Field generation;
+    /** Le geste du bras, montré aux autres seulement ; null sur un serveur qui le nomme autrement (pas de geste alors). */
+    private final MethodHandle geste;
+    private final Object mainPrincipale;
+    /** L'animation ordinaire du bras, sur les serveurs où le geste en demande une ; null sur les autres. */
+    private final Object animation;
 
     private Pont() throws ReflectiveOperationException {
         MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -94,6 +99,27 @@ final class Pont {
             g = null;
         }
         generation = g;
+
+        MethodHandle bras = null;
+        Object main = null, anim = null;
+        try {
+            Class<?> hand = Class.forName("net.minecraft.world.InteractionHand", true, serveur);
+            main = hand.getField("MAIN_HAND").get(null);
+            try {
+                // depuis la 26 : le geste dit quelle animation jouer
+                Class<?> ordinaire = Class.forName("net.minecraft.world.item.component.SwingAnimation", true, serveur);
+                anim = ordinaire.getField("DEFAULT").get(null);
+                bras = lookup.unreflect(serverPlayer.getMethod("swing", hand, ordinaire, boolean.class));
+            } catch (ReflectiveOperationException e) {
+                anim = null;
+                bras = lookup.unreflect(serverPlayer.getMethod("swing", hand, boolean.class));
+            }
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
+            bras = null;
+        }
+        geste = bras;
+        mainPrincipale = main;
+        animation = anim;
     }
 
     /** Le paquet qui déplace une entité montrée. */
@@ -135,6 +161,29 @@ final class Pont {
                 // le cadre s'affiche quand même
             }
         }
+    }
+
+    /**
+     * Fait bouger le bras d'un joueur pour ceux qui le regardent, pas pour lui : dans sa propre vue, l'objet qu'il tient
+     * en main traverserait l'écran derrière son menu à chaque clic.
+     */
+    void geste(Player joueur) {
+        if (geste != null) {
+            try {
+                if (animation != null) {
+                    geste.invoke(handle(joueur), mainPrincipale, animation, false);
+                } else {
+                    geste.invoke(handle(joueur), mainPrincipale, false);
+                }
+            } catch (Throwable e) {
+                // un geste en moins, rien d'autre
+            }
+        }
+    }
+
+    /** Ce serveur sait-il montrer le geste du bras aux autres joueurs seulement ? */
+    boolean gestePossible() {
+        return geste != null;
     }
 
     /** L'objet serveur d'une entité. */

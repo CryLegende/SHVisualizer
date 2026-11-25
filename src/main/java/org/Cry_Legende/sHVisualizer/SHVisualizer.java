@@ -61,6 +61,9 @@ public final class SHVisualizer extends JavaPlugin {
             getLogger().severe("Aucun affichage : " + panne + ". Le reste du serveur n'est pas touché.");
             return;
         }
+        if (!pont.gestePossible() && reglages.joueurs().geste()) {
+            getLogger().warning("Le geste du bras (joueurs.geste-du-bras) n'existe pas sous ce nom sur cette version du serveur : il n'est pas montré.");
+        }
         moteur = new Moteur(this, pont);
         Effets effets = new Effets(this, moteur);
         tables = new Tables(this, moteur, effets);

@@ -118,9 +118,12 @@ final class Effets {
      * Un objet vole d'un point à un autre, pour les joueurs à portée du « centre ». Le jeu du joueur fait tout le trajet
      * à partir d'un seul message, envoyé deux ticks après l'apparition : un display tout juste apparu saute à sa pose
      * sans glisser.
+     *
+     * @param versJoueur true : du bloc vers le joueur ; false : du joueur vers le bloc. Du côté du joueur l'objet est
+     *                   petit : vu de ses propres yeux, à quelques centimètres, il remplirait l'écran.
      */
     void vol(World monde, ItemStack objet, double dx, double dy, double dz, double ax, double ay, double az,
-             double cx, double cy, double cz, double portee, boolean son) {
+             double cx, double cy, double cz, double portee, boolean son, boolean versJoueur) {
         Scene scene = new Scene(moteur, monde, cx, cy, cz, portee, Scene.LIBRE);
         moteur.jouer(scene);
         if (scene.spectateurs.isEmpty()) {
@@ -132,7 +135,8 @@ final class Effets {
             Reglages.Vol vol = plugin.reglages().objets().vol();
             float angle = (float) (ThreadLocalRandom.current().nextFloat() * Math.PI * 2);
             Affichage a = Affichage.objet(moteur.pont, monde, dx, dy, dz);
-            Poses.flotter(a.objet(), objet, angle, vol.taille());
+            float depart = versJoueur ? vol.taille() : vol.tailleJoueur(), arrivee = versJoueur ? vol.tailleJoueur() : vol.taille();
+            Poses.flotter(a.objet(), objet, angle, depart);
             scene.ajouter(a);
             moteur.apres(2, () -> {
                 if (scene.fermee) {
@@ -140,7 +144,7 @@ final class Effets {
                 }
                 try {
                     a.display().setTransformation(Poses.flottant((float) (ax - dx), (float) (ay - dy), (float) (az - dz),
-                            angle + (float) Math.toRadians(vol.tour()), vol.tailleArrivee()));
+                            angle + (float) Math.toRadians(vol.tour()), arrivee));
                     a.relancer(vol.duree());
                     scene.envoyer(a);
                 } catch (RuntimeException e) {
@@ -177,7 +181,7 @@ final class Effets {
         double[] c = cible(vers);
         try {
             a.display().setTransformation(Poses.flottant((float) (c[0] - a.x), (float) (c[1] - a.y), (float) (c[2] - a.z),
-                    angle + (float) Math.toRadians(vol.tour()), vol.tailleArrivee()));
+                    angle + (float) Math.toRadians(vol.tour()), vol.tailleJoueur()));
             a.relancer(vol.duree());
             scene.envoyer(a);
         } catch (RuntimeException e) {

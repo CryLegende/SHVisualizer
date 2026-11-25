@@ -48,7 +48,7 @@ record Reglages(Joueurs joueurs, Objets objets, Tables tables, Conteneurs conten
     record Flottant(float taille, float rotation, int pas) {
     }
 
-    record Vol(int duree, float taille, float tailleArrivee, float tour, double hauteurJoueur, String son, float volume,
+    record Vol(int duree, float taille, float tailleJoueur, float tour, double hauteurJoueur, String son, float volume,
                float tonMin, float tonMax) {
     }
 
@@ -146,7 +146,7 @@ record Reglages(Joueurs joueurs, Objets objets, Tables tables, Conteneurs conten
             throw new IllegalArgumentException("objets.flottant : rotation × pas doit rester sous 175 degrés (le jeu tourne par le plus court)");
         }
         Vol vol = new Vol(l.entier("objets.vol.duree", 1, 60), l.reel("objets.vol.taille", 0.05, 4),
-                l.reel("objets.vol.taille-arrivee", 0.01, 4), l.reel("objets.vol.tour", 0, 175), l.reel("objets.vol.hauteur-joueur", 0, 3),
+                l.reel("objets.vol.taille-joueur", 0.01, 4), l.reel("objets.vol.tour", 0, 175), l.reel("objets.vol.hauteur-joueur", 0, 3),
                 l.son("objets.vol.son"), l.reel("objets.vol.volume", 0, 4), l.reel("objets.vol.ton-min", 0.5, 2), l.reel("objets.vol.ton-max", 0.5, 2));
         Objets objets = new Objets(l.materiaux("objets.a-plat", l.textes("objets.a-plat")), l.reel("objets.pose.taille-plat", 0.02, 1),
                 l.reel("objets.pose.taille-volume", 0.02, 1), flottant, vol);

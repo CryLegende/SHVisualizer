@@ -161,7 +161,7 @@ final class Tables implements Listener {
         }
         s.sale = true;
         if (haut && plugin.reglages().joueurs().geste()) {
-            s.joueur.swingMainHand();
+            moteur.pont.geste(s.joueur);
         }
     }
 
@@ -176,7 +176,7 @@ final class Tables implements Listener {
             int taille = e.getView().getTopInventory().getSize();
             for (int raw : e.getRawSlots()) {
                 if (raw < taille) {
-                    s.joueur.swingMainHand();
+                    moteur.pont.geste(s.joueur);
                     break;
                 }
             }
@@ -572,7 +572,7 @@ final class Tables implements Listener {
                 s.dernierePrise = t;
                 double[] c = effets.cible(s.joueur);
                 double y = s.by + s.def.hauteur() + 0.2;
-                effets.vol(s.scene.monde, prise, s.cx, y, s.cz, c[0], c[1], c[2], s.cx, y, s.cz, s.scene.portee, true);
+                effets.vol(s.scene.monde, prise, s.cx, y, s.cz, c[0], c[1], c[2], s.cx, y, s.cz, s.scene.portee, true, true);
             }
         }
         s.previsualisation = resultat != null;
