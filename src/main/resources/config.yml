@@ -1,0 +1,529 @@
+# ======================================================================== #
+#                       SHVisualizer - Configuration                       #
+# ======================================================================== #
+#
+# Montre aux joueurs autour ce qui se passe dans les blocs : les objets posés sur un établi ou une enclume pendant qu'un
+# joueur s'en sert, le résultat qui flotte puis vole vers lui, l'objet qui entre dans un coffre ou en sort, l'objet de la
+# table d'enchantement et ses enchantements, la grille d'un crafter, la barre d'un spawner, le nom d'une bannière, le
+# disque d'un jukebox, la note d'un bloc musical.
+#
+# Tout est dessiné avec des « display » envoyés aux seuls joueurs proches : le serveur ne garde aucune entité, et un
+# mouvement est un seul message que le jeu du joueur anime lui-même. Seuls les blocs qu'un joueur a devant lui sont
+# relus : une table tant qu'elle est ouverte, un spawner tant que sa barre est vue. Un joueur qui ne bouge pas n'est
+# pas recalculé.
+#
+# Fichiers : config.yml (ce fichier), messages.yml (tous les textes). Tout se change sans toucher au code, puis
+# /shvisualizer reload. Un fichier invalide ne change rien : le message nomme la ligne en cause.
+#
+# Commandes :
+#   /visuels                        Coupe ou remet les affichages pour soi (gardé d'une connexion à l'autre).
+#   /shvisualizer reload            Recharge config.yml et messages.yml.
+#   /shvisualizer info              Scènes en cours, joueurs qui les voient et temps pris par le plugin, poste par poste.
+#   /shvisualizer on|off <joueur>   Remet ou coupe les affichages d'un joueur connecté (pour un bouton de menu).
+#
+# Permissions :
+#   shvisualizer.visuels                /visuels (tous les joueurs).
+#   shvisualizer.admin                  Toutes les sous-commandes de /shvisualizer.
+#   shvisualizer.admin.<sous-commande>  reload, info, on, off.
+#
+# Placeholder (PlaceholderAPI) :
+#   %shvisualizer_status%     enabled si le joueur voit les affichages, disabled s'il les a coupés.
+#
+# Unités : les distances sont en blocs, les durées en ticks (20 ticks = 1 seconde), les angles en degrés.
+# Couleurs : "#RRGGBB", ou "#AARRGGBB" pour régler aussi l'opacité (AA de 00 invisible à FF plein).
+# Blocs et objets : noms du jeu en majuscules (CRAFTING_TABLE) ; « * » remplace n'importe quelle suite de lettres
+# ("*_DOOR" = toutes les portes, y compris celles de bois ajoutés plus tard).
+# Sons : nom du jeu (entity.item.pickup) ; vide = pas de son.
+
+joueurs:
+  # true : un joueur voit les affichages sans rien faire. false : il doit les activer avec /visuels.
+  actif-par-defaut: true
+  # Tous les combien de ticks un joueur qui se déplace reçoit ou perd les affichages autour de lui
+  periode: 10
+  # Les joueurs autour voient le bras de celui qui manipule un bloc bouger à chaque clic
+  geste-du-bras: true
+  # Mondes sans aucun affichage
+  mondes-ignores: []
+
+objets:
+  # Blocs que le jeu dessine comme une image plate (pousse, porte, fleur...) : ils sont posés à plat comme les objets.
+  # Tous les autres blocs sont posés debout, en volume. Un bloc ajouté par une mise à jour du jeu est en volume tant
+  # qu'il n'est pas ici.
+  a-plat:
+    - "*_SAPLING"
+    - MANGROVE_PROPAGULE
+    - "*_DOOR"
+    - "*_SIGN"
+    - CANDLE
+    - "*_CANDLE"
+    - GLASS_PANE
+    - "*_STAINED_GLASS_PANE"
+    - "*_BARS"
+    - "*_CHAIN"
+    - LANTERN
+    - SOUL_LANTERN
+    - "*COPPER_LANTERN"
+    - "*TORCH"
+    - "*RAIL"
+    - "*CAMPFIRE"
+    - "*CORAL"
+    - "*CORAL_FAN"
+    - "*_AMETHYST_BUD"
+    - AMETHYST_CLUSTER
+    - "*_TULIP"
+    - "*_FUNGUS"
+    - BROWN_MUSHROOM
+    - RED_MUSHROOM
+    - "*_VINES"
+    - "*_EYEBLOSSOM"
+    - ALLIUM
+    - AZURE_BLUET
+    - BLUE_ORCHID
+    - CORNFLOWER
+    - DANDELION
+    - GOLDEN_DANDELION
+    - LILY_OF_THE_VALLEY
+    - OXEYE_DAISY
+    - POPPY
+    - WITHER_ROSE
+    - TORCHFLOWER
+    - SUNFLOWER
+    - LILAC
+    - PEONY
+    - ROSE_BUSH
+    - PITCHER_PLANT
+    - PINK_PETALS
+    - WILDFLOWERS
+    - CACTUS_FLOWER
+    - BAMBOO
+    - BUSH
+    - FIREFLY_BUSH
+    - DEAD_BUSH
+    - RED_SHRUB
+    - FERN
+    - LARGE_FERN
+    - SHORT_GRASS
+    - TALL_GRASS
+    - SHORT_DRY_GRASS
+    - TALL_DRY_GRASS
+    - SEAGRASS
+    - KELP
+    - SUGAR_CANE
+    - NETHER_SPROUTS
+    - NETHER_WART
+    - WHEAT
+    - LILY_PAD
+    - LEAF_LITTER
+    - GLOW_LICHEN
+    - SCULK_VEIN
+    - RESIN_CLUMP
+    - PALE_HANGING_MOSS
+    - SEA_PICKLE
+    - COBWEB
+    - VINE
+    - CRIMSON_ROOTS
+    - WARPED_ROOTS
+    - HANGING_ROOTS
+    - FROGSPAWN
+    - TURTLE_EGG
+    - SNIFFER_EGG
+    - BELL
+    - BREWING_STAND
+    - CAKE
+    - CAULDRON
+    - COMPARATOR
+    - REPEATER
+    - FLOWER_POT
+    - HOPPER
+    - LADDER
+    - LEVER
+    - TRIPWIRE_HOOK
+    - POINTED_DRIPSTONE
+    - SULFUR_SPIKE
+    - BARRIER
+    - LIGHT
+    - STRUCTURE_VOID
+
+  # Objet posé sur un bloc
+  pose:
+    # Côté d'une image posée à plat
+    taille-plat: 0.19
+    # Côté d'un bloc posé debout
+    taille-volume: 0.14
+
+  # Objet qui flotte au-dessus d'un bloc : résultat d'un établi, objet de la table d'enchantement, disque d'un jukebox
+  flottant:
+    # 1 = la taille d'un objet tombé au sol
+    taille: 1.0
+    # Degrés par tick dont il tourne sur lui-même ; 0 = immobile
+    rotation: 3.0
+    # Ticks entre deux envois de la rotation (le jeu du joueur fait le mouvement entre les deux)
+    pas: 20
+
+  # Objet qui vole entre un bloc et un joueur
+  vol:
+    # Ticks du trajet
+    duree: 7
+    # Taille au départ et à l'arrivée (1 = un objet tombé au sol)
+    taille: 0.9
+    taille-arrivee: 0.35
+    # Degrés dont il tourne pendant le trajet (moins de 180)
+    tour: 140
+    # Hauteur visée sur le joueur, depuis ses pieds
+    hauteur-joueur: 1.1
+    # Son joué quand le résultat d'un bloc arrive au joueur
+    son: entity.item.pickup
+    volume: 0.35
+    # Le ton est tiré au hasard entre ces deux valeurs
+    ton-min: 1.0
+    ton-max: 2.0
+
+# Blocs dont l'interface s'ouvre : les objets des cases sont montrés sur le bloc tant qu'un joueur s'en sert.
+tables:
+  actif: true
+  # Distance jusqu'à laquelle les joueurs voient les objets d'une table
+  portee: 16
+  # Filet de sécurité : tous les combien de ticks une table ouverte est relue même sans clic
+  verification: 10
+  # Quand le joueur prend le résultat : les objets posés se rejoignent au centre, un nuage, et le résultat vole vers lui
+  prise:
+    # Ticks pendant lesquels les objets posés glissent vers le centre en rétrécissant
+    rapprochement: 6
+    # Taille des objets à la fin du glissement, par rapport à leur taille posée (aussi pour le retour à la fermeture)
+    taille-finale: 0.3
+    particule: CLOUD
+    quantite: 6
+    # Étalement du nuage autour du centre du bloc, et vitesse de ses particules
+    etalement: 0.05
+    vitesse: 0.03
+    # Ticks minimum entre deux animations sur le même bloc (les clics en rafale n'en font pas autant)
+    pause: 5
+  # À la fermeture, les objets restés sur le bloc retournent vers le joueur au lieu de disparaître d'un coup
+  retour: true
+  # Taille du nom écrit au-dessus d'un résultat (blocs dont « resultat.nom » vaut true)
+  taille-nom: 0.55
+
+  # Table d'enchantement : ce que fait l'objet quand le joueur enchante
+  enchantement:
+    # De combien l'objet monte, et en combien de ticks
+    montee: 0.9
+    duree-montee: 18
+    # Ticks pendant lesquels les enchantements obtenus restent écrits au-dessus
+    maintien: 45
+    duree-descente: 8
+    particule: PORTAL
+    quantite: 120
+    vitesse: 1.0
+    # Hauteur du texte au-dessus de l'objet monté, et sa taille
+    hauteur-texte: 0.45
+    taille-texte: 0.7
+
+  # Une entrée par bloc. « mode » :
+  #   pose          les cases listées sont posées sur le bloc, le résultat flotte au-dessus.
+  #   unique        un seul objet est montré : le résultat s'il y en a un, sinon la première case remplie de « cases ».
+  #                 « presentation » : debout (dressé sur le bloc), flottant, carte (carte dessinée à plat sur le bloc).
+  #   enchantement  l'objet de la case flotte, et joue l'animation réglée plus haut quand il est enchanté.
+  # Positions d'une case, vues par le joueur qui se sert du bloc, depuis le centre du bloc :
+  #   droite (négatif = à gauche), fond (positif = loin de lui), tourne (degrés, facultatif).
+  # « hauteur » : depuis le bas du bloc. « resultat.nom: true » écrit le nom de l'objet au-dessus de lui s'il en a un.
+  blocs:
+    etabli:
+      actif: true
+      blocs:
+        - CRAFTING_TABLE
+      mode: pose
+      hauteur: 1.0
+      cases:
+        1:
+          droite: -0.19
+          fond: 0.19
+        2:
+          droite: 0.0
+          fond: 0.19
+        3:
+          droite: 0.19
+          fond: 0.19
+        4:
+          droite: -0.19
+          fond: 0.0
+        5:
+          droite: 0.0
+          fond: 0.0
+        6:
+          droite: 0.19
+          fond: 0.0
+        7:
+          droite: -0.19
+          fond: -0.19
+        8:
+          droite: 0.0
+          fond: -0.19
+        9:
+          droite: 0.19
+          fond: -0.19
+      resultat:
+        case: 0
+        hauteur: 1.3
+        nom: false
+
+    enclume:
+      actif: true
+      blocs:
+        - ANVIL
+        - CHIPPED_ANVIL
+        - DAMAGED_ANVIL
+      mode: pose
+      hauteur: 1.0
+      cases:
+        0:
+          droite: -0.17
+          fond: 0.0
+          tourne: 20
+        1:
+          droite: 0.17
+          fond: 0.0
+          tourne: -20
+      resultat:
+        case: 2
+        hauteur: 1.3
+        nom: true
+
+    meule:
+      actif: true
+      blocs:
+        - GRINDSTONE
+      mode: pose
+      hauteur: 1.0
+      cases:
+        0:
+          droite: -0.17
+          fond: 0.0
+          tourne: 20
+        1:
+          droite: 0.17
+          fond: 0.0
+          tourne: -20
+      resultat:
+        case: 2
+        hauteur: 1.3
+        nom: false
+
+    table-de-forgeron:
+      actif: true
+      blocs:
+        - SMITHING_TABLE
+      mode: pose
+      hauteur: 1.0
+      cases:
+        0:
+          droite: 0.0
+          fond: 0.0
+        1:
+          droite: -0.27
+          fond: 0.0
+          tourne: 20
+        2:
+          droite: 0.27
+          fond: 0.0
+          tourne: -20
+      resultat:
+        case: 3
+        hauteur: 1.3
+        nom: false
+
+    metier-a-tisser:
+      actif: true
+      blocs:
+        - LOOM
+      mode: unique
+      presentation: debout
+      hauteur: 1.0
+      taille: 0.75
+      cases:
+        - 0
+      resultat:
+        case: 3
+
+    tailleur-de-pierre:
+      actif: true
+      blocs:
+        - STONECUTTER
+      mode: unique
+      presentation: flottant
+      hauteur: 0.62
+      taille: 0.8
+      # L'objet montré ne tourne pas, et des éclats en sortent quand il change
+      tourne: false
+      eclats: 12
+      cases:
+        - 0
+      resultat:
+        case: 1
+
+    table-de-cartographie:
+      actif: true
+      blocs:
+        - CARTOGRAPHY_TABLE
+      mode: unique
+      presentation: carte
+      hauteur: 1.0
+      cases:
+        - 0
+      resultat:
+        case: 2
+
+    table-d-enchantement:
+      actif: true
+      blocs:
+        - ENCHANTING_TABLE
+      mode: enchantement
+      hauteur: 1.45
+      cases:
+        - 0
+
+# Blocs de rangement : un objet vole du joueur vers le bloc quand il en dépose un, et du bloc vers lui quand il en prend.
+conteneurs:
+  actif: true
+  portee: 16
+  # Ticks minimum entre deux vols pour le même joueur
+  pause: 2
+  # Menu d'un plugin ouvert en cliquant sur un des blocs ci-dessous (un coffre agrandi par un plugin, par exemple) :
+  # les objets déposés et pris y volent comme dans le bloc lui-même. false : seuls les inventaires du jeu sont montrés.
+  menus-de-plugins: true
+  # Une entrée par bloc. « acces » : dessus (l'objet passe par le haut du bloc, à « hauteur » depuis le bas) ou
+  # face (par le côté tourné vers le joueur, à « distance » du centre).
+  blocs:
+    coffre:
+      actif: true
+      blocs:
+        - CHEST
+        - TRAPPED_CHEST
+        - "*COPPER_CHEST"
+      acces: dessus
+      hauteur: 1.0
+    coffre-de-l-ender:
+      actif: true
+      blocs:
+        - ENDER_CHEST
+      acces: dessus
+      hauteur: 1.0
+    tonneau:
+      actif: true
+      blocs:
+        - BARREL
+      acces: face
+      distance: 0.65
+    boite-de-shulker:
+      actif: true
+      blocs:
+        - "*SHULKER_BOX"
+      acces: face
+      distance: 0.65
+    distributeur:
+      actif: true
+      blocs:
+        - DISPENSER
+      acces: face
+      distance: 0.65
+    dropper:
+      actif: true
+      blocs:
+        - DROPPER
+      acces: face
+      distance: 0.65
+
+# Spawners, bannières, jukebox et crafters sont cherchés dans les chunks proches des joueurs, pas dans tout le monde.
+blocs:
+  # Tous les combien de ticks un chunk proche d'un joueur est relu, pour voir ce qui y a été posé ou retiré autrement
+  # que par un joueur (WorldEdit, île réinitialisée...)
+  relecture: 600
+  # Tous les combien de ticks une bannière affichée est vérifiée (est-elle toujours là ?)
+  verification: 100
+
+# Crafter : sa grille est montrée sur le dessus du bloc, case fermée comprise.
+crafter:
+  actif: true
+  portee: 12
+  # Nombre de crafters montrés à un même joueur au plus
+  maximum-par-joueur: 24
+  hauteur: 1.0
+  # Écart entre deux cases de la grille
+  ecart: 0.19
+  # Objet montré sur une case fermée
+  case-fermee: BARRIER
+  # Tous les combien de ticks un crafter vu par un joueur est relu
+  verification: 20
+
+# Spawner : une barre se remplit jusqu'à la prochaine apparition. Elle n'est montrée que si le spawner tourne.
+spawner:
+  actif: true
+  portee: 16
+  # Nombre de barres montrées à un même joueur au plus ; au-delà, les plus proches passent d'abord
+  maximum-par-joueur: 150
+  # Tous les combien de ticks un spawner vu par un joueur est relu. La barre avance toute seule entre deux lectures.
+  verification: 10
+  # Écart toléré, en ticks, entre la barre et le vrai compte avant de la recaler
+  tolerance: 12
+  barre:
+    largeur: 0.62
+    epaisseur: 0.055
+    # La barre se place devant le bloc, du côté du joueur : distance depuis le centre, hauteur depuis le bas
+    distance: 0.72
+    hauteur: 0.46
+    # Couleur de la partie remplie, puis de la partie qui reste à remplir
+    remplissage: "#FFD83D"
+    fond: "#B0909090"
+    # Vue à travers les blocs, comme un nom de joueur
+    a-travers-les-blocs: true
+    # Nombre de positions autour du bloc, et ticks du glissement de l'une à l'autre
+    positions: 8
+    glissement: 4
+    # En dessous de cette distance, la barre suit le joueur de près quand il tourne autour du bloc. Plus loin, où
+    # l'écart ne se voit pas, elle ne change de côté que s'il passe franchement de l'autre côté.
+    suivi: 6
+  # Les joueurs Bedrock ne la reçoivent pas : leur jeu ne sait pas dessiner ces rectangles
+  bedrock: false
+
+# Bannière nommée (sur une enclume) : son nom est écrit au-dessus.
+banniere:
+  actif: true
+  portee: 16
+  # Hauteur du texte depuis le bas du bloc : bannière sur pied, puis bannière murale
+  hauteur: 2.0
+  hauteur-murale: 1.05
+  taille: 0.7
+  a-travers-les-blocs: false
+  # Noms jamais écrits (expressions régulières, couleurs retirées)
+  ignorer:
+    - "Bannière funeste"
+    - "Banniere funeste"
+    - "Ominous [Bb]anner"
+
+# Jukebox : le disque flotte au-dessus et son titre est écrit (messages.yml).
+jukebox:
+  actif: true
+  portee: 16
+  hauteur: 1.15
+  titre: true
+  hauteur-titre: 1.75
+  taille-titre: 0.6
+  # Tous les combien de ticks un jukebox vu par un joueur est relu
+  verification: 20
+
+# Bloc musical : sa note est écrite un instant quand un joueur le touche ou le règle.
+bloc-musical:
+  actif: true
+  portee: 16
+  # Ticks d'affichage
+  duree: 50
+  # Distance du texte depuis le centre du bloc, du côté touché
+  distance: 0.8
+  taille: 0.65
+
+# Textes écrits au-dessus des blocs : nom d'une bannière, titre d'un disque, note, enchantements, nom sur l'enclume.
+etiquettes:
+  # Bannières et jukebox montrés à un même joueur au plus
+  maximum-par-joueur: 40
+  # Couleur du fond derrière le texte ("#00000000" = aucun fond) et ombre des lettres
+  fond: "#50000000"
+  ombre: true

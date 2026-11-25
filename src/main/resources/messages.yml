@@ -1,0 +1,114 @@
+# ============================================================================
+#  SHVisualizer : messages du chat et textes écrits au-dessus des blocs
+# ============================================================================
+#  Codes couleur & et &#RRGGBB acceptés. Format SkyHand pour le chat : préfixe
+#  de la couleur du type, texte en &7, mots importants dans la couleur du type.
+#    &a succès · &e information · &6 avertissement · &c erreur
+#  Un message vide n'est pas envoyé.
+# ============================================================================
+
+chat:
+  visuels-actifs: "&7&l« &a&lSH &8&l» &7Animations des blocs &aactivées&7."
+  visuels-coupes: "&7&l« &e&lSH &8&l» &7Animations des blocs &ecoupées&7, &e/visuels &7pour les remettre."
+  joueur-seulement: "&7&l« &c&lSH &8&l» &7Cette commande se fait &cen jeu&7."
+  joueur-absent: "&7&l« &c&lSH &8&l» &7Le joueur &c{joueur} &7n'est pas connecté."
+  usage: "&7&l« &e&lSH &8&l» &7Utilisation : &e/shvisualizer <{sous-commandes}>"
+  reload-ok: "&7&l« &a&lSH &8&l» &7Configuration &arechargée&7."
+  # {erreur} : le fichier et la ligne en cause
+  reload-erreur: "&7&l« &c&lSH &8&l» &7Rien n'a changé, &c{erreur}"
+  # {scenes} affichages en cours · {vues} fois montrés · {joueurs} joueurs connectés, dont {coupes} les ont coupés
+  info: "&7&l« &e&lSH &8&l» &e{scenes} &7affichage(s), montrés &e{vues} &7fois à &e{joueurs} &7joueur(s) &8({coupes} les ont coupés)"
+  # {moyenne} {pire} : microsecondes par tick sur la dernière minute (un tick dure 50 000 microsecondes)
+  info-cout: "&7&l« &e&lSH &8&l» &7Temps pris par tick : &e{moyenne} µs &7en moyenne, &e{pire} µs &7au pire, sur 50 000."
+  # Le même par poste : événements reçus, animations en cours, tables ouvertes, blocs relus, passage des joueurs
+  info-poste: "&8  {poste} &7{moyenne} µs &8(pire {pire})"
+  # Écrit seulement s'il y en a eu. Le détail des dix premières est dans la console.
+  info-erreurs: "&7&l« &6&lSH &8&l» &6{erreurs} &7erreur(s) d'affichage depuis le chargement, détail dans la console."
+  # {raison} : ce qui manque sur ce serveur
+  info-arrete: "&7&l« &c&lSH &8&l» &7Aucun affichage : &c{raison}"
+
+# Table d'enchantement : lignes écrites au-dessus de l'objet enchanté
+enchantement:
+  # Couleur d'un enchantement, puis d'une malédiction (le nom et le niveau sont écrits dans la langue du joueur)
+  couleur: "&b"
+  malediction: "&c"
+  # Dernière ligne : le prix payé. {n} : niveaux d'expérience
+  cout-un: "&a1 niveau"
+  cout: "&a{n} niveaux"
+
+# Jukebox : {disque} est le titre du disque dans la langue du joueur, ou le nom donné au disque sur une enclume
+jukebox:
+  titre: "&f♪ {disque}"
+  # Couleur du titre par disque ; « defaut » pour tous les autres
+  couleurs:
+    defaut: "&f"
+    MUSIC_DISC_13: "&6"
+    MUSIC_DISC_CAT: "&a"
+    MUSIC_DISC_BLOCKS: "&c"
+    MUSIC_DISC_CHIRP: "&4"
+    MUSIC_DISC_FAR: "&a"
+    MUSIC_DISC_MALL: "&9"
+    MUSIC_DISC_MELLOHI: "&d"
+    MUSIC_DISC_WAIT: "&b"
+    MUSIC_DISC_WARD: "&3"
+    MUSIC_DISC_PIGSTEP: "&6"
+    MUSIC_DISC_OTHERSIDE: "&9"
+    MUSIC_DISC_5: "&3"
+    MUSIC_DISC_RELIC: "&b"
+    MUSIC_DISC_CREATOR: "&a"
+    MUSIC_DISC_CREATOR_MUSIC_BOX: "&6"
+    MUSIC_DISC_PRECIPICE: "&a"
+
+# Bloc musical. {instrument} : nom ci-dessous · {note} : nom ci-dessous, de la couleur de la note dans le jeu
+bloc-musical:
+  format: "&6{instrument} {note}"
+  # Quand une tête est posée sur le bloc, il joue le cri de la tête : {tete} est son nom
+  tete: "&6{tete}"
+  instruments:
+    PIANO: "Piano"
+    BASS_DRUM: "Grosse caisse"
+    SNARE_DRUM: "Caisse claire"
+    STICKS: "Baguettes"
+    BASS_GUITAR: "Basse"
+    FLUTE: "Flûte"
+    BELL: "Carillon"
+    GUITAR: "Guitare"
+    CHIME: "Cloches"
+    XYLOPHONE: "Xylophone"
+    IRON_XYLOPHONE: "Vibraphone"
+    COW_BELL: "Cloche de vache"
+    DIDGERIDOO: "Didgeridoo"
+    BIT: "Bit"
+    BANJO: "Banjo"
+    PLING: "Piano électrique"
+    TRUMPET: "Trompette"
+    TRUMPET_EXPOSED: "Trompette"
+    TRUMPET_WEATHERED: "Trompette"
+    TRUMPET_OXIDIZED: "Trompette"
+  # Les 25 notes, de la plus grave à la plus aiguë
+  notes:
+    - "Fa#"
+    - "Sol"
+    - "Sol#"
+    - "La"
+    - "La#"
+    - "Si"
+    - "Do"
+    - "Do#"
+    - "Ré"
+    - "Ré#"
+    - "Mi"
+    - "Fa"
+    - "Fa# aigu"
+    - "Sol aigu"
+    - "Sol# aigu"
+    - "La aigu"
+    - "La# aigu"
+    - "Si aigu"
+    - "Do aigu"
+    - "Do# aigu"
+    - "Ré aigu"
+    - "Ré# aigu"
+    - "Mi aigu"
+    - "Fa aigu"
+    - "Fa# très aigu"

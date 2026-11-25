@@ -1,0 +1,48 @@
+name: SHVisualizer
+version: '${project.version}'
+main: org.Cry_Legende.sHVisualizer.SHVisualizer
+api-version: '1.21'
+author: Cry_Legende
+description: Montre aux joueurs autour les objets des établis, coffres, tables d'enchantement, spawners, bannières et jukebox, en display envoyés par paquets.
+softdepend:
+  - OpenInv
+  - PlaceholderAPI
+
+commands:
+  visuels:
+    description: Coupe ou remet les animations des blocs pour soi.
+    usage: /<command>
+    permission: shvisualizer.visuels
+    aliases:
+      - visuel
+  shvisualizer:
+    description: Administration de SHVisualizer.
+    usage: /<command> <reload|info|on|off> [joueur]
+    aliases:
+      - interactionvisualizer
+      - iv
+
+permissions:
+  shvisualizer.visuels:
+    description: Couper ou remettre les animations des blocs pour soi (/visuels).
+    default: true
+  shvisualizer.admin:
+    description: Toutes les sous-commandes de /shvisualizer.
+    default: op
+    children:
+      shvisualizer.admin.reload: true
+      shvisualizer.admin.info: true
+      shvisualizer.admin.on: true
+      shvisualizer.admin.off: true
+  shvisualizer.admin.reload:
+    description: Recharger la configuration.
+    default: op
+  shvisualizer.admin.info:
+    description: Voir les affichages en cours et le temps pris par le plugin.
+    default: op
+  shvisualizer.admin.on:
+    description: Remettre les affichages à un joueur.
+    default: op
+  shvisualizer.admin.off:
+    description: Couper les affichages d'un joueur.
+    default: op
