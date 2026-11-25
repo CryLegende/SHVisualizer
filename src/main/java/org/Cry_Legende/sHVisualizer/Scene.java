@@ -24,6 +24,13 @@ class Scene {
     /** Scène courte dont les spectateurs sont fixés à la création. */
     boolean figee;
     boolean fermee;
+    /**
+     * Les objets sont envoyés deux ticks après l'apparition de leur display. false : la scène s'en charge elle-même
+     * (un objet qui vole reçoit le sien avec son premier mouvement).
+     */
+    boolean revele = true;
+    /** Ticks entre l'apparition d'un display et l'envoi de son objet : le jeu du joueur a eu le temps de le poser. */
+    private static final int REVELATION = 2;
 
     Scene(Moteur moteur, World monde, double x, double y, double z, double portee, int famille) {
         this.moteur = moteur;
@@ -38,12 +45,40 @@ class Scene {
     /** Ajoute un affichage et le montre à ceux qui voient déjà la scène. */
     Affichage ajouter(Affichage a) {
         parties.add(a);
+        if (spectateurs.isEmpty()) {
+            return a;
+        }
         for (Vue v : spectateurs) {
             List<Object> paquets = new ArrayList<>(2);
             apparition(v, a, paquets);
             moteur.envoyer(v, moteur.pont.lot(paquets));
         }
+        if (revele && a.differe()) {
+            List<Vue> pour = new ArrayList<>(spectateurs);
+            moteur.apres(REVELATION, () -> reveler(List.of(a), pour));
+        }
         return a;
+    }
+
+    /** Envoie leur objet aux displays que ces joueurs viennent de voir apparaître, s'ils les voient toujours. */
+    private void reveler(List<Affichage> lesquels, List<Vue> pour) {
+        if (fermee) {
+            return;
+        }
+        for (Affichage a : lesquels) {
+            if (!parties.contains(a)) {
+                continue;
+            }
+            Object objet = a.revelation();
+            if (objet == null) {
+                continue;
+            }
+            for (Vue v : pour) {
+                if (spectateurs.contains(v)) {
+                    moteur.envoyer(v, objet);
+                }
+            }
+        }
     }
 
     /** Retire un affichage chez tous ceux qui le voient. */
@@ -100,10 +135,21 @@ class Scene {
             return;
         }
         List<Object> paquets = new ArrayList<>(parties.size() * 2);
+        List<Affichage> objets = null;
         for (Affichage a : parties) {
             apparition(v, a, paquets);
+            if (revele && a.differe()) {
+                if (objets == null) {
+                    objets = new ArrayList<>(parties.size());
+                }
+                objets.add(a);
+            }
         }
         moteur.envoyer(v, moteur.pont.lot(paquets));
+        if (objets != null) {
+            List<Affichage> lesquels = objets;
+            moteur.apres(REVELATION, () -> reveler(lesquels, List.of(v)));
+        }
     }
 
     /** Appelée par le moteur : ce joueur ne voit plus la scène. Le retrait part toujours, même s'il a changé de monde. */

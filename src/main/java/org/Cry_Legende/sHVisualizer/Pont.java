@@ -44,6 +44,9 @@ final class Pont {
     private final Object mainPrincipale;
     /** L'animation ordinaire du bras, sur les serveurs où le geste en demande une ; null sur les autres. */
     private final Object animation;
+    /** De quoi reconnaître l'objet d'un display parmi ses données ; null sur un serveur qui les range autrement. */
+    private final MethodHandle valeurDe;
+    private final Class<?> pile;
 
     private Pont() throws ReflectiveOperationException {
         MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -120,6 +123,17 @@ final class Pont {
         geste = bras;
         mainPrincipale = main;
         animation = anim;
+
+        MethodHandle valeur = null;
+        Class<?> objet = null;
+        try {
+            valeur = lookup.unreflect(Class.forName("net.minecraft.network.syncher.SynchedEntityData$DataValue", true, serveur).getMethod("value"));
+            objet = Class.forName("net.minecraft.world.item.ItemStack", true, serveur);
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
+            valeur = null;
+        }
+        valeurDe = valeur;
+        pile = objet;
     }
 
     /** Le paquet qui déplace une entité montrée. */
@@ -211,6 +225,25 @@ final class Pont {
             return v == null ? List.of() : v;
         } catch (Throwable e) {
             throw echec(e);
+        }
+    }
+
+    /**
+     * Sépare les données d'une entité en deux : [tout sauf l'objet qu'elle montre, cet objet]. Un display reçoit son
+     * objet après son apparition, jamais avec. Sur un serveur où on ne sait pas le reconnaître, tout reste ensemble.
+     */
+    List<?>[] separer(List<?> valeurs) {
+        if (valeurDe == null || valeurs.isEmpty()) {
+            return new List<?>[] {valeurs, List.of()};
+        }
+        try {
+            List<Object> reste = new java.util.ArrayList<>(valeurs.size()), objet = new java.util.ArrayList<>(1);
+            for (Object v : valeurs) {
+                (pile.isInstance(valeurDe.invoke(v)) ? objet : reste).add(v);
+            }
+            return new List<?>[] {reste, objet};
+        } catch (Throwable e) {
+            return new List<?>[] {valeurs, List.of()};
         }
     }
 

@@ -125,6 +125,8 @@ final class Effets {
     void vol(World monde, ItemStack objet, double dx, double dy, double dz, double ax, double ay, double az,
              double cx, double cy, double cz, double portee, boolean son, boolean versJoueur) {
         Scene scene = new Scene(moteur, monde, cx, cy, cz, portee, Scene.LIBRE);
+        // l'objet part avec le premier mouvement : il n'attend pas immobile à son point de départ
+        scene.revele = false;
         moteur.jouer(scene);
         if (scene.spectateurs.isEmpty()) {
             scene.fermer();

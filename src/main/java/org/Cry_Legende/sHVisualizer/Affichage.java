@@ -28,6 +28,11 @@ final class Affichage {
     final double x, y, z;
     private final float pitch;
     private final int donnee;
+    /**
+     * Un objet n'arrive jamais avec son apparition : un jeu qui montre l'entité avant d'avoir pris sa taille la
+     * dessinerait un instant à la taille d'un bloc. Il est envoyé juste après, quand la pose est déjà en place.
+     */
+    private final boolean differe;
     private List<Object> apparition;
 
     private Affichage(Pont pont, Entity entite, double x, double y, double z, float pitch, int donnee) {
@@ -41,6 +46,7 @@ final class Affichage {
         this.z = z;
         this.pitch = pitch;
         this.donnee = donnee;
+        this.differe = entite instanceof ItemDisplay;
     }
 
     static Affichage objet(Pont pont, World monde, double x, double y, double z) {
@@ -98,9 +104,25 @@ final class Affichage {
     void apparition(List<Object> dans, double x, double y, double z) {
         dans.add(pont.apparition(handle, id, uuid, x, y, z, pitch, 0f, donnee));
         List<?> valeurs = pont.valeurs(handle);
+        if (differe) {
+            valeurs = pont.separer(valeurs)[0];
+        }
         if (!valeurs.isEmpty()) {
             dans.add(pont.donnees(id, valeurs));
         }
+    }
+
+    /** L'objet d'un display, à envoyer à ceux qui viennent de le voir apparaître ; null s'il n'en montre pas. */
+    Object revelation() {
+        if (!differe) {
+            return null;
+        }
+        List<?> objet = pont.separer(pont.valeurs(handle))[1];
+        return objet.isEmpty() ? null : pont.donnees(id, objet);
+    }
+
+    boolean differe() {
+        return differe;
     }
 
     /** Ce qui a changé depuis le dernier envoi, null si rien. */
