@@ -2,6 +2,7 @@ package org.Cry_Legende.sHVisualizer;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Display;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStreamReader;
@@ -36,6 +37,10 @@ class ReglagesTest {
         assertFalse(r.conteneurs().parBloc().get(Material.BARREL).dessus());
         assertTrue(r.conteneurs().parBloc().containsKey(Material.PURPLE_SHULKER_BOX));
         assertTrue(r.conteneurs().parBloc().containsKey(Material.SHULKER_BOX));
+        // textes : debout, sans fond, avec ombre
+        assertEquals(Display.Billboard.VERTICAL, r.etiquettes().orientation());
+        assertEquals(0, r.etiquettes().fond().getAlpha());
+        assertTrue(r.etiquettes().ombre());
     }
 
     @Test

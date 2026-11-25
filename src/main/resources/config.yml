@@ -524,6 +524,11 @@ bloc-musical:
 etiquettes:
   # Bannières et jukebox montrés à un même joueur au plus
   maximum-par-joueur: 40
-  # Couleur du fond derrière le texte ("#00000000" = aucun fond) et ombre des lettres
-  fond: "#50000000"
+  # Comment le texte suit le joueur qui le regarde :
+  #   debout  il tourne vers lui mais reste droit, même vu d'en haut ou d'en bas
+  #   face    il se penche aussi, pour rester exactement de face
+  orientation: debout
+  # Couleur du fond derrière le texte ; "#00000000" = aucun fond
+  fond: "#00000000"
+  # Ombre des lettres
   ombre: true

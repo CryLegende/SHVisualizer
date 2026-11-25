@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Display;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -26,7 +27,16 @@ record Reglages(Joueurs joueurs, Objets objets, Tables tables, Conteneurs conten
                 Banniere banniere, Jukebox jukebox, Notes notes, Etiquettes etiquettes, int relecture,
                 int verificationBlocs, int rayonChunks) {
 
-    record Etiquettes(int maximum, Color fond, boolean ombre) {
+    record Etiquettes(int maximum, Color fond, boolean ombre, Display.Billboard orientation) {
+    }
+
+    private static Display.Billboard orientation(Lecteur l) {
+        String o = l.texte("etiquettes.orientation").trim().toLowerCase(Locale.ROOT);
+        return switch (o) {
+            case "debout" -> Display.Billboard.VERTICAL;
+            case "face" -> Display.Billboard.CENTER;
+            default -> throw new IllegalArgumentException("« etiquettes.orientation » : « debout » ou « face », pas « " + o + " »");
+        };
     }
 
     record Joueurs(boolean actifParDefaut, int periode, boolean geste, Set<String> mondesIgnores) {
@@ -215,7 +225,7 @@ record Reglages(Joueurs joueurs, Objets objets, Tables tables, Conteneurs conten
         double max = Math.max(Math.max(lesTables.portee(), lesConteneurs.portee()), Math.max(crafter.portee(), spawner.portee()));
         max = Math.max(max, Math.max(banniere.portee(), Math.max(jukebox.portee(), notes.portee())));
         return new Reglages(joueurs, objets, lesTables, lesConteneurs, crafter, spawner, banniere, jukebox, notes,
-                new Etiquettes(l.entier("etiquettes.maximum-par-joueur", 0, 10000), l.couleur("etiquettes.fond"), l.bool("etiquettes.ombre")),
+                new Etiquettes(l.entier("etiquettes.maximum-par-joueur", 0, 10000), l.couleur("etiquettes.fond"), l.bool("etiquettes.ombre"), orientation(l)),
                 l.entier("blocs.relecture", 20, 72000),
                 l.entier("blocs.verification", 1, 72000), Math.max(1, (int) Math.ceil(max / 16.0)));
     }

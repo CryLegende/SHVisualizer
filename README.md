@@ -36,6 +36,9 @@ coffre, par exemple) : les listes « blocs » des sections `tables` et `conteneu
 Le menu qu'un plugin ouvre quand on clique sur un de ces blocs de rangement (coffre agrandi, collecteur) est traité
 comme le bloc lui-même : les objets y volent pareil, sans réglage propre à ce plugin (`conteneurs.menus-de-plugins`).
 
+Les textes (nom d'une bannière, titre d'un disque, note, enchantements, nom sur l'enclume) sont écrits sans fond, avec
+une ombre, et restent droits en se tournant vers le joueur : section `etiquettes` de `config.yml`.
+
 Les gestes d'un joueur invisible (vanish, mode spectateur, coffre ouvert en silence avec OpenInv) ne montrent rien.
 Chaque joueur peut couper les affichages pour lui avec `/visuels`.
 

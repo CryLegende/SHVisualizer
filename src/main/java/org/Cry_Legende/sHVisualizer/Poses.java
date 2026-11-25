@@ -87,9 +87,9 @@ final class Poses {
         return new Transformation(new Vector3f(tx, ty, tz), new Quaternionf(de.getLeftRotation()), taille, new Quaternionf(de.getRightRotation()));
     }
 
-    /** Texte qui fait toujours face au joueur, lisible de nuit. */
+    /** Texte tourné vers le joueur, lisible de nuit ; son fond, son ombre et sa façon de tourner viennent des réglages. */
     static void etiquette(TextDisplay t, float taille, boolean aTravers, Reglages.Etiquettes style) {
-        t.setBillboard(Display.Billboard.CENTER);
+        t.setBillboard(style.orientation());
         t.setBrightness(new Display.Brightness(15, 15));
         t.setSeeThrough(aTravers);
         t.setShadowed(style.ombre());
